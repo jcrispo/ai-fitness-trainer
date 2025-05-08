@@ -1,20 +1,13 @@
-# 1) Build stage: compile with Java 21 JDK
-FROM eclipse-temurin:21-jdk AS builder
+FROM maven:3.9.9-eclipse-temurin-21 AS builder
 WORKDIR /workspace
 
-# copy Maven wrapper, pom, then download deps
-COPY mvnw .mvn pom.xml ./
-RUN chmod +x mvnw && ./mvnw dependency:go-offline -B
+COPY pom.xml .
+COPY backend/services backend/services
 
-# copy source, compile, and package
-COPY src src
-RUN ./mvnw clean package -DskipTests
+RUN mvn dependency:go-offline -pl backend/services/ai-service -am -B
+RUN mvn clean package -pl backend/services/ai-service -am -DskipTests -B
 
-# 2) Runtime stage: run on Java 21 JRE
 FROM eclipse-temurin:21-jre
 WORKDIR /app
-
-# pull in the fat JAR from builder
-COPY --from=builder /workspace/target/*.jar app.jar
-
+COPY --from=builder /workspace/backend/services/ai-service/target/*.jar app.jar
 ENTRYPOINT ["java","-jar","app.jar"]
