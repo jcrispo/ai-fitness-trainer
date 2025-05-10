@@ -46,6 +46,12 @@
       <scope>runtime</scope>
     </dependency>
 
+    <!-- Actuator -->
+    <dependency>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-starter-actuator</artifactId>
+    </dependency>
+
     <!-- Liquibase for DB migrations -->
     <dependency>
       <groupId>org.liquibase</groupId>

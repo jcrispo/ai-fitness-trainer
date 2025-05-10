@@ -1,0 +1,9 @@
+management:
+  endpoints:
+    web:
+      exposure:
+        # expose only these actuator endpoints
+        include: health,info,metrics
+  endpoint:
+    health:
+      show-details: always   # return component details (DB, disk, etc.)
